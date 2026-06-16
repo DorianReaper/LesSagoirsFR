@@ -2,7 +2,10 @@
 
 function renderCategories() {
     const grid = document.getElementById('categoriesGrid');
-    if (!grid) return;
+    if (!grid) {
+        console.warn("⚠️ categoriesGrid non trouvé");
+        return;
+    }
     grid.innerHTML = '';
     
     // N'afficher que les catégories principales (pas les sous-catégories)
@@ -29,22 +32,44 @@ function openCategoryPage(categoryName) {
         return;
     }
     
-    // Cacher toutes les vues
-    document.getElementById('profileView').style.display = 'none';
-    document.getElementById('categoriesView').style.display = 'none';
-    document.getElementById('genericCategoryView').style.display = 'none';
-    document.getElementById('subHistoryView').style.display = 'none';
-    document.getElementById('articlesView').style.display = 'none';
+    // Vérifier que tous les éléments existent avant de les manipuler
+    const categoriesView = document.getElementById('categoriesView');
+    const genericCategoryView = document.getElementById('genericCategoryView');
+    const subHistoryView = document.getElementById('subHistoryView');
+    const articlesView = document.getElementById('articlesView');
+    const categoryPageView = document.getElementById('categoryPageView');
     
-    const view = document.getElementById('categoryPageView');
-    view.style.display = 'block';
+    // Cacher toutes les vues avec vérification
+    if (categoriesView) categoriesView.style.display = 'none';
+    if (genericCategoryView) genericCategoryView.style.display = 'none';
+    if (subHistoryView) subHistoryView.style.display = 'none';
+    if (articlesView) articlesView.style.display = 'none';
     
-    document.getElementById('categoryPageTitle').innerHTML = `<i class="fas ${CATEGORY_ICONS[categoryName] || 'fa-folder'}"></i> ${data.titre}`;
-    document.getElementById('categoryPageSubtitle').textContent = data.sousTitre;
-    document.getElementById('categoryPageImage').src = data.image;
-    document.getElementById('categoryPageImage').alt = data.titre;
-    document.getElementById('categoryPageResume').textContent = data.resume;
-    document.getElementById('categoryPageContent').innerHTML = data.contenu;
+    // Afficher la page de catégorie
+    if (categoryPageView) {
+        categoryPageView.style.display = 'block';
+    } else {
+        console.warn("⚠️ categoryPageView non trouvé");
+        return;
+    }
+    
+    // Mettre à jour les éléments de la page
+    const titleEl = document.getElementById('categoryPageTitle');
+    const subtitleEl = document.getElementById('categoryPageSubtitle');
+    const imageEl = document.getElementById('categoryPageImage');
+    const resumeEl = document.getElementById('categoryPageResume');
+    const contentEl = document.getElementById('categoryPageContent');
+    
+    if (titleEl) {
+        titleEl.innerHTML = `<i class="fas ${CATEGORY_ICONS[categoryName] || 'fa-folder'}"></i> ${data.titre}`;
+    }
+    if (subtitleEl) subtitleEl.textContent = data.sousTitre;
+    if (imageEl) {
+        imageEl.src = data.image;
+        imageEl.alt = data.titre;
+    }
+    if (resumeEl) resumeEl.textContent = data.resume;
+    if (contentEl) contentEl.innerHTML = data.contenu;
     
     // Reset du bouton retour vers les catégories
     const backBtn = document.getElementById('backFromCategoryBtn');
@@ -63,12 +88,23 @@ function openCategoryPage(categoryName) {
 }
 
 function goBackToCategories() {
-    document.getElementById('profileView').style.display = 'none';
-    document.getElementById('categoriesView').style.display = 'block';
-    document.getElementById('categoryPageView').style.display = 'none';
-    document.getElementById('genericCategoryView').style.display = 'none';
-    document.getElementById('subHistoryView').style.display = 'none';
-    document.getElementById('articlesView').style.display = 'none';
+    // Vérifier que les éléments existent avant de les manipuler
+    const categoriesView = document.getElementById('categoriesView');
+    const categoryPageView = document.getElementById('categoryPageView');
+    const genericCategoryView = document.getElementById('genericCategoryView');
+    const subHistoryView = document.getElementById('subHistoryView');
+    const articlesView = document.getElementById('articlesView');
+    const profileView = document.getElementById('profileView');
+    
+    // Afficher les catégories
+    if (categoriesView) categoriesView.style.display = 'block';
+    
+    // Cacher les autres vues
+    if (categoryPageView) categoryPageView.style.display = 'none';
+    if (genericCategoryView) genericCategoryView.style.display = 'none';
+    if (subHistoryView) subHistoryView.style.display = 'none';
+    if (articlesView) articlesView.style.display = 'none';
+    if (profileView) profileView.style.display = 'none';
 }
 
 function showHome() {
@@ -76,7 +112,7 @@ function showHome() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Exporter les fonctions
+// Exporter les fonctions pour les rendre globales
 window.renderCategories = renderCategories;
 window.openCategoryPage = openCategoryPage;
 window.goBackToCategories = goBackToCategories;

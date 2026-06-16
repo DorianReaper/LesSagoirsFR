@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const lowerQuery = query.toLowerCase();
         const results = [];
 
-        // Parcourir toutes les catégories (incluant les sous-catégories)
         for (let key in CATEGORIES_DATA) {
             const data = CATEGORIES_DATA[key];
             if (!data) continue;
@@ -107,25 +106,18 @@ document.addEventListener('DOMContentLoaded', function() {
             let score = 0;
             let matches = [];
 
-            // Recherche dans le titre
             if (data.titre && data.titre.toLowerCase().includes(lowerQuery)) {
                 score += 10;
                 matches.push({ field: 'titre', text: data.titre });
             }
-
-            // Recherche dans le sous-titre
             if (data.sousTitre && data.sousTitre.toLowerCase().includes(lowerQuery)) {
                 score += 8;
                 matches.push({ field: 'sousTitre', text: data.sousTitre });
             }
-
-            // Recherche dans le résumé
             if (data.resume && data.resume.toLowerCase().includes(lowerQuery)) {
                 score += 6;
                 matches.push({ field: 'resume', text: data.resume });
             }
-
-            // Recherche dans le contenu
             if (data.contenu && data.contenu.toLowerCase().includes(lowerQuery)) {
                 score += 5;
                 const index = data.contenu.toLowerCase().indexOf(lowerQuery);
@@ -134,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 matches.push({ field: 'contenu', text: data.contenu.substring(start, end) + '...' });
             }
 
-            // Recherche dans les sous-catégories (spécifique pour Histoire)
             if (key === 'Histoire') {
                 const subKeys = ['WW1', 'WW2', 'Napoleon', 'France'];
                 subKeys.forEach(subKey => {
@@ -159,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Bonus : recherche par mot-clé
             const keywords = {
                 'Histoire': ['histoire', 'passé', 'civilisation', 'époque', 'guerre', 'roi', 'révolution'],
                 'WW1': ['guerre', 'tranchée', '1914', '1918', 'grande guerre', 'verdun', 'somme'],
@@ -190,22 +180,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Recherche par alias
-            const aliases = {
-                'Napoleon': ['napoléon', 'bonaparte'],
-                'France': ['république', 'hexagone'],
-                'WW1': ['première guerre mondiale', 'grande guerre'],
-                'WW2': ['seconde guerre mondiale']
-            };
-            if (aliases[key]) {
-                aliases[key].forEach(alias => {
-                    if (alias.toLowerCase().includes(lowerQuery)) {
-                        score += 3;
-                        matches.push({ field: 'alias', text: alias });
-                    }
-                });
-            }
-
             if (score > 0) {
                 results.push({
                     key: key,
@@ -220,12 +194,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return results;
     }
 
-    // Version memoized de la recherche
     const memoizedPerformSearch = memoize(performSearch);
 
     function showSuggestions(query) {
         if (!suggestionsDiv) return;
-        // Utiliser la version memoized
         const results = memoizedPerformSearch(query);
 
         if (results.length === 0) {
@@ -387,22 +359,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ====== NAVIGATION ======
+    // Accueil - affiche les catégories
     document.getElementById('navAccueil').addEventListener('click', showHome);
     document.getElementById('navCategoriesBtn').addEventListener('click', showHome);
+    document.getElementById('homeBtn').addEventListener('click', showHome);
+    
+    // Quiz
     document.getElementById('navQuizBtn').addEventListener('click', function() {
         if (typeof openQuizNewTab !== 'undefined') openQuizNewTab();
         else window.location.href = 'quiz.html';
     });
+    
+    // Frise
     document.getElementById('navTimelineBtn').addEventListener('click', function() {
         if (typeof openTimelineNewTab !== 'undefined') openTimelineNewTab();
         else window.location.href = 'timeline.html';
     });
+    
+    // Aléatoire
     document.getElementById('navRandomQuizBtn').addEventListener('click', function() {
         if (typeof openRandomQuiz !== 'undefined') openRandomQuiz();
         else window.location.href = 'random.html';
     });
-    document.getElementById('homeBtn').addEventListener('click', showHome);
     
+    // Profil
+    document.getElementById('navProfileBtn').addEventListener('click', function() {
+        window.location.href = 'profile.html';
+    });
+    
+    // Boutons retour
     document.getElementById('backFromSubBtn').addEventListener('click', goBackToCategories);
     document.getElementById('backFromArticlesBtn').addEventListener('click', goBackToCategories);
     document.getElementById('backFromGenericBtn').addEventListener('click', goBackToCategories);
@@ -417,7 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('savoirs_theme', isDark ? 'dark' : 'light');
             this.innerHTML = isDark ? '☀️ Jour' : '🌙 Nuit';
             
-            // Mettre à jour les préférences du profil
             if (typeof userProfile !== 'undefined' && userProfile) {
                 userProfile.data.preferences.theme = isDark ? 'dark' : 'light';
                 userProfile.save();
@@ -466,6 +450,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (btn) {
             btn.addEventListener('click', function() {
                 if (mobileNav) mobileNav.classList.remove('active');
+                if (id === 'mobileAccueil' || id === 'mobileCategories') {
+                    showHome();
+                } else if (id === 'mobileQuiz') {
+                    window.location.href = 'quiz.html';
+                } else if (id === 'mobileTimeline') {
+                    window.location.href = 'timeline.html';
+                } else if (id === 'mobileRandomQuiz') {
+                    window.location.href = 'random.html';
+                } else if (id === 'mobileProfile') {
+                    window.location.href = 'profile.html';
+                }
             });
         }
     });
@@ -476,7 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!toast) {
             toast = document.createElement('div');
             toast.id = 'toastMessage';
-            toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#F59E0B;color:#0F172A;padding:12px 24px;border-radius:60px;z-index:1100;opacity:0;transition:opacity0.3s;pointer-events:none;font-weight:600';
+            toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#F59E0B;color:#0F172A;padding:12px 24px;border-radius:60px;z-index:1100;opacity:0;transition:opacity0.3s;pointer-events:none;font-weight:600;font-size:0.95rem;min-height:44px;box-shadow:0 8px 30px rgba(0,0,0,0.2);';
             document.body.appendChild(toast);
         }
         toast.textContent = message;
@@ -493,7 +488,6 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.goBackToCategories = function() {
-        document.getElementById('profileView').style.display = 'none';
         document.getElementById('categoriesView').style.display = 'block';
         document.getElementById('categoryPageView').style.display = 'none';
         document.getElementById('genericCategoryView').style.display = 'none';
