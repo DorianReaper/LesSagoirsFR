@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SavoirsFR · Encyclopédie ultime</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Styles spécifiques pour les pages catégories (Wikipedia-like) */
+        .category-page {
+            background: var(--card-bg);
+            border-radius: 32px;
+            padding: 32px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .category-page img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin: 16px 0;
+        }
+        .category-page .resume {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            border-left: 4px solid var(--accent);
+            padding-left: 16px;
+            margin: 16px 0;
+        }
+        .category-page .content {
+            line-height: 1.8;
+        }
+        .category-page .content h3 {
+            font-family: 'Playfair Display', serif;
+            margin: 24px 0 12px 0;
+            color: var(--accent);
+        }
+        .category-page .content ul {
+            padding-left: 24px;
+            margin: 8px 0 16px 0;
+        }
+        .category-page .content li {
+            margin: 6px 0;
+        }
+        .category-page .content blockquote {
+            background: var(--bg);
+            padding: 16px 24px;
+            border-radius: 16px;
+            border-left: 4px solid var(--accent);
+            margin: 16px 0;
+            font-style: italic;
+        }
+        .wiki-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        .wiki-table th {
+            background: var(--accent);
+            color: #0F172A;
+            padding: 10px;
+            text-align: left;
+        }
+        .wiki-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .wiki-table tr:nth-child(even) {
+            background: var(--bg);
+        }
+        .category-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+        }
+        @media (max-width: 768px) {
+            .category-page { padding: 20px; }
+            .category-title { font-size: 1.5rem; }
+            .wiki-table { font-size: 0.75rem; }
+            .wiki-table th, .wiki-table td { padding: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header">
+    <div class="container header-inner">
+        <div class="logo-medallion" id="homeBtn">
+            <img src="https://i.ibb.co/8g77Knp8/file-0000000010f471f48fb37ca32c8194e4.png" alt="SavoirsFR" class="logo-img" onerror="this.src='https://placehold.co/48x48'">
+            <div class="logo-text">Savoirs<span style="color:var(--accent)">FR</span></div>
+        </div>
+        <div class="nav-links">
+            <button id="navAccueil">Accueil</button>
+            <button id="navCategoriesBtn">Catégories</button>
+            <button id="navQuizBtn">📝 Quiz</button>
+            <button id="navTimelineBtn">📅 Frise</button>
+            <button id="navRandomQuizBtn">🎲 Aléatoire</button>
+            <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Nuit</button>
+        </div>
+        <div class="burger-menu" id="burgerMenu">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+        <button id="mobileAccueil">Accueil</button>
+        <button id="mobileCategories">Catégories</button>
+        <button id="mobileQuiz">Quiz</button>
+        <button id="mobileTimeline">Frise</button>
+        <button id="mobileRandomQuiz">Aléatoire</button>
+        <button id="mobileTheme">Nuit</button>
+    </div>
+</header>
+
+<main>
+    <div class="hero-section" id="heroSection">
+        <h1>SavoirsFR</h1>
+        <div class="subhead">L'encyclopédie ultime — Une page par catégorie, comme Wikipédia</div>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" class="search-bar" id="searchInput" placeholder="Rechercher... (Ctrl+K)">
+                <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> Explorer</button>
+            </div>
+        </div>
+        <div class="stats-bar">
+            <span><i class="fas fa-database"></i> <span id="totalArticles">0</span> catégories</span>
+            <span><i class="fas fa-tags"></i> <span id="totalCategories">0</span> domaines</span>
+            <span><i class="fas fa-heart"></i> <span id="favCount">0</span> favoris</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Vue Catégories (grille) -->
+        <div id="categoriesView">
+            <div class="section-title">Explorer par domaine</div>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+
+        <!-- Page Catégorie (Wikipedia-like) -->
+        <div id="categoryPageView" style="display: none;">
+            <div class="category-page">
+                <div class="category-header-actions">
+                    <button class="back-btn" id="backFromCategoryBtn"><i class="fas fa-arrow-left"></i> Retour aux catégories</button>
+                    <button class="back-btn" id="shareCategoryBtn" style="background:var(--text-dim)"><i class="fas fa-share-alt"></i> Partager</button>
+                </div>
+                <h1 class="category-title" id="categoryPageTitle"></h1>
+                <p id="categoryPageSubtitle" style="color:var(--text-dim); margin-bottom: 12px;"></p>
+                <img id="categoryPageImage" src="" alt="">
+                <div class="resume" id="categoryPageResume"></div>
+                <div class="content" id="categoryPageContent"></div>
+            </div>
+        </div>
+
+        <!-- Sous-catégories Histoire (conservé) -->
+        <div id="subHistoryView" style="display: none;">
+            <div class="category-header">
+                <button class="back-btn" id="backFromSubBtn"><i class="fas fa-arrow-left"></i> Retour</button>
+                <h2 class="category-title">📜 Histoire · Choisis une période</h2>
+            </div>
+            <div class="categories-grid" id="subHistoryGrid"></div>
+        </div>
+
+        <!-- Articles d'une sous-catégorie (conservé) -->
+        <div id="articlesView" style="display: none;">
+            <div class="category-header">
+                <button class="back-btn" id="backFromArticlesBtn"><i class="fas fa-arrow-left"></i> Retour</button>
+                <h2 class="category-title" id="articlesTitle"></h2>
+            </div>
+            <div id="articlesContainer" class="infinite-grid"></div>
+        </div>
+
+        <!-- Vue catégorie générique (conservée pour compatibilité) -->
+        <div id="genericCategoryView" style="display: none;">
+            <div class="category-header">
+                <button class="back-btn" id="backFromGenericBtn"><i class="fas fa-arrow-left"></i> Retour</button>
+                <h2 class="category-title" id="genericCatTitle"></h2>
+            </div>
+            <div id="genericContainer" class="infinite-grid"></div>
+            <button id="loadMoreGenericBtn" class="load-more-btn">Charger plus</button>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>SavoirsFR — Bibliothèque numérique d'excellence</p>
+        <div class="quote" id="randomQuote"></div>
+        <p style="font-size: 0.75rem; margin-top: 12px;">Transmission du savoir francophone · Édition Ultime</p>
+    </div>
+</footer>
+
+<div id="modal" class="modal-overlay">
+    <div class="modal-content" id="modalContent"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="favorites.js"></script>
+<script src="articles.js"></script>
+<script src="categories.js"></script>
+<script src="quiz.js"></script>
+<script src="timeline.js"></script>
+<script src="map.js"></script>
+<script src="app.js"></script>
+
+<script>
+    // Bouton retour depuis la page catégorie
+    document.getElementById('backFromCategoryBtn').addEventListener('click', function() {
+        if (typeof goBackToCategories !== 'undefined') {
+            goBackToCategories();
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    // Partager la catégorie
+    document.getElementById('shareCategoryBtn').addEventListener('click', function() {
+        const title = document.getElementById('categoryPageTitle').textContent;
+        if (navigator.share) {
+            navigator.share({ title: title, text: 'Découvrez ' + title + ' sur SavoirsFR !' });
+        } else {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                showToast("🔗 Lien copié !");
+            });
+        }
+    });
+</script>
+</body>
+</html>
