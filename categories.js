@@ -94,7 +94,6 @@ function goBackToCategories() {
     const genericCategoryView = document.getElementById('genericCategoryView');
     const subHistoryView = document.getElementById('subHistoryView');
     const articlesView = document.getElementById('articlesView');
-    const profileView = document.getElementById('profileView');
     
     // Afficher les catégories
     if (categoriesView) categoriesView.style.display = 'block';
@@ -104,7 +103,6 @@ function goBackToCategories() {
     if (genericCategoryView) genericCategoryView.style.display = 'none';
     if (subHistoryView) subHistoryView.style.display = 'none';
     if (articlesView) articlesView.style.display = 'none';
-    if (profileView) profileView.style.display = 'none';
 }
 
 function showHome() {

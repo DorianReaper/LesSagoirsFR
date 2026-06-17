@@ -67,6 +67,8 @@
             padding: 8px 0;
             transition: color 0.2s;
             position: relative;
+            min-height: 44px;
+            min-width: 44px;
         }
         .nav-links button::after {
             content: '';
@@ -96,6 +98,8 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            min-height: 44px;
+            min-width: 44px;
         }
         .theme-toggle:hover {
             background: var(--accent);
@@ -119,6 +123,7 @@
             color: #0F172A;
             margin-bottom: 16px;
             font-size: 0.95rem;
+            min-height: 44px;
         }
         .profile-page .back-btn:hover {
             background: #D97706;
@@ -298,6 +303,7 @@
             color: var(--text);
             transition: all 0.2s;
             font-weight: 500;
+            min-height: 44px;
         }
         .edit-interests-btn:hover {
             background: var(--accent);
@@ -370,6 +376,16 @@
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
+        .preference-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .preference-item a:hover {
+            color: #D97706;
+            text-decoration: underline;
+        }
         .no-interests, .no-badges {
             color: var(--text-dim);
             font-style: italic;
@@ -413,6 +429,10 @@
             flex-direction: column;
             gap: 5px;
             cursor: pointer;
+            min-height: 44px;
+            min-width: 44px;
+            justify-content: center;
+            padding: 4px;
         }
         .burger-menu span {
             width: 25px;
@@ -558,6 +578,7 @@
             transition: all 0.2s;
             color: #0F172A;
             font-size: 0.8rem;
+            min-height: 44px;
         }
         .footer-legal .tos-btn:hover {
             background: var(--accent);
@@ -584,10 +605,16 @@
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
             .nav-links {
                 display: none;
             }
             .burger-menu {
+                display: flex;
+            }
+            .mobile-nav.active {
                 display: flex;
             }
             .profile-stats {
@@ -683,7 +710,7 @@
             <button id="navQuizBtn">Quiz</button>
             <button id="navTimelineBtn">Frise</button>
             <button id="navRandomQuizBtn">Aléatoire</button>
-            <button id="navProfileBtn" class="active">Profil</button>
+            <button id="navProfileBtn" class="active"><i class="fas fa-user"></i> Profil</button>
             <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Nuit</button>
         </div>
         <div class="burger-menu" id="burgerMenu" aria-label="Menu de navigation" role="button" tabindex="0">
@@ -696,7 +723,7 @@
         <button id="mobileQuiz">Quiz</button>
         <button id="mobileTimeline">Frise</button>
         <button id="mobileRandomQuiz">Aléatoire</button>
-        <button id="mobileProfile" class="active">Profil</button>
+        <button id="mobileProfile" class="active"><i class="fas fa-user"></i> Profil</button>
         <button id="mobileTheme"><i class="fas fa-moon"></i> Nuit</button>
     </div>
 </header>
@@ -729,10 +756,10 @@
                 <a href="quiz.html">Quiz</a>
                 <a href="timeline.html">Frise</a>
                 <a href="random.html">Aléatoire</a>
+                <a href="tos.html">Conditions</a>
             </div>
             <div class="footer-legal">
-                <button class="tos-btn" id="showTosBtn"><i class="fas fa-file-contract"></i> Conditions</button>
-                <p class="footer-copy">&copy; 2026 SavoirsFR · Transmission du savoir</p>
+                <p class="footer-copy">&copy; 2026 SavoirsFR · Transmission du savoir francophone</p>
             </div>
         </div>
         <div class="quote" id="randomQuote"></div>
@@ -837,7 +864,6 @@
             burger.addEventListener('click', function() {
                 mobileNav.classList.toggle('active');
             });
-            // Accessibilité : Enter/Barre d'espace
             burger.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();

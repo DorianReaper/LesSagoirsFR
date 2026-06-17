@@ -435,35 +435,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ====== MENU BURGER ======
-    const burger = document.getElementById('burgerMenu');
-    const mobileNav = document.getElementById('mobileNav');
-    if (burger && mobileNav) {
-        burger.addEventListener('click', function() {
-            mobileNav.classList.toggle('active');
-        });
-    }
-
-    // ====== BOUTONS MOBILE ======
-    const mobileItems = ['mobileAccueil', 'mobileCategories', 'mobileQuiz', 'mobileTimeline', 'mobileRandomQuiz', 'mobileTheme', 'mobileProfile'];
-    mobileItems.forEach(id => {
-        const btn = document.getElementById(id);
-        if (btn) {
-            btn.addEventListener('click', function() {
-                if (mobileNav) mobileNav.classList.remove('active');
-                if (id === 'mobileAccueil' || id === 'mobileCategories') {
-                    showHome();
-                } else if (id === 'mobileQuiz') {
-                    window.location.href = 'quiz.html';
-                } else if (id === 'mobileTimeline') {
-                    window.location.href = 'timeline.html';
-                } else if (id === 'mobileRandomQuiz') {
-                    window.location.href = 'random.html';
-                } else if (id === 'mobileProfile') {
-                    window.location.href = 'profile.html';
-                }
-            });
-        }
-    });
+    // NE PAS AJOUTER D'AUTRES ÉCOUTEURS ICI - Le script dans index.html gère le burger
+    // Ceci évite les conflits d'écouteurs
 
     // ====== FONCTIONS GLOBALES ======
     window.showToast = function(message, duration = 2000) {
@@ -488,11 +461,17 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     window.goBackToCategories = function() {
-        document.getElementById('categoriesView').style.display = 'block';
-        document.getElementById('categoryPageView').style.display = 'none';
-        document.getElementById('genericCategoryView').style.display = 'none';
-        document.getElementById('subHistoryView').style.display = 'none';
-        document.getElementById('articlesView').style.display = 'none';
+        const categoriesView = document.getElementById('categoriesView');
+        const categoryPageView = document.getElementById('categoryPageView');
+        const genericCategoryView = document.getElementById('genericCategoryView');
+        const subHistoryView = document.getElementById('subHistoryView');
+        const articlesView = document.getElementById('articlesView');
+        
+        if (categoriesView) categoriesView.style.display = 'block';
+        if (categoryPageView) categoryPageView.style.display = 'none';
+        if (genericCategoryView) genericCategoryView.style.display = 'none';
+        if (subHistoryView) subHistoryView.style.display = 'none';
+        if (articlesView) articlesView.style.display = 'none';
     };
 
     showToast("✅ SavoirsFR prêt !");

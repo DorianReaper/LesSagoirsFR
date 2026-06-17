@@ -540,9 +540,9 @@
                 <a href="quiz.html">Quiz</a>
                 <a href="timeline.html">Frise</a>
                 <a href="random.html">Aléatoire</a>
+                <a href="tos.html">Conditions</a>
             </div>
             <div class="footer-legal">
-                <button class="tos-btn" id="showTosBtn"><i class="fas fa-file-contract"></i> Conditions d'utilisation</button>
                 <p class="footer-copy">&copy; 2026 SavoirsFR · Transmission du savoir francophone</p>
             </div>
         </div>
@@ -647,11 +647,7 @@
         }
 
         // ====== TOS ======
-        const showTosBtn = document.getElementById('showTosBtn');
         const tosModal = document.getElementById('conditionsModal');
-        if(showTosBtn && tosModal) {
-            showTosBtn.addEventListener('click', function() { tosModal.style.display = 'flex'; });
-        }
         document.getElementById('acceptTosBtn')?.addEventListener('click', function() {
             localStorage.setItem('savoirs_tos_accepted', 'true');
             tosModal.style.display = 'none';
@@ -687,17 +683,40 @@
             document.getElementById('mobileNav').classList.remove('active');
         });
 
-        // ====== MENU BURGER ======
+        // ====== MENU BURGER - GESTION UNIQUE ======
         const burger = document.getElementById('burgerMenu');
         const mobileNav = document.getElementById('mobileNav');
+        
         if (burger && mobileNav) {
-            burger.addEventListener('click', function() {
+            // Fonction pour basculer le menu
+            function toggleMobileMenu(e) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
                 mobileNav.classList.toggle('active');
-            });
+                burger.classList.toggle('active');
+            }
+            
+            // Écouteur clic sur le burger
+            burger.addEventListener('click', toggleMobileMenu);
+            
+            // Accessibilité : Entrée et barre d'espace
             burger.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    mobileNav.classList.toggle('active');
+                    e.stopPropagation();
+                    toggleMobileMenu(e);
+                }
+            });
+            
+            // Fermer le menu si on clique en dehors
+            document.addEventListener('click', function(e) {
+                if (mobileNav.classList.contains('active')) {
+                    if (!mobileNav.contains(e.target) && !burger.contains(e.target)) {
+                        mobileNav.classList.remove('active');
+                        burger.classList.remove('active');
+                    }
                 }
             });
         }
